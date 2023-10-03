@@ -1,0 +1,178 @@
+body {
+    text-align: center;
+    background-color: rgb(247, 244, 244);
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+table {
+    margin: 0 auto; /* Center the table horizontally */
+}
+
+th, td {
+    border: 1px solid #000000;
+}
+
+.upcomingGamesTable .liveGamesContainer .pastGamesTable {
+    text-align: center;
+    margin-top: 20px;
+    width: auto;
+}
+
+.container {
+    margin-top: 4%;
+    display: inline-block;
+    width: 40%;
+    padding: 50px;
+    border-radius: 20px; 
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); 
+    text-align: center;
+    background-color: white;
+}
+
+button {
+    border: 2px solid rgb(40, 5, 87);
+    border-radius: 15px;
+    background: white;
+    padding: 5px 8px;
+}
+
+button:hover {
+    transition: 0.5s;
+    background-color: rgb(40, 5, 87);
+    color: white;
+}
+
+
+.leagueText {
+    max-width: 30%;
+    margin: 0 auto; 
+    padding: 2px; /* Add some padding to the text for spacing */
+}
+
+.leagueContainer{
+    margin-top: 4%;
+    background-color: white;
+    float: left;
+    margin-left: 3%;
+    border-radius: 15px; 
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); 
+    text-align: center;
+    padding: 15px;
+    width: 18%;
+}
+
+.leagueContainer button {
+    display: block; /* Change the display property to block */
+    border: 2px solid rgb(255, 255, 255);
+    width: 100%;
+    border-radius: 15px;
+    background: white;
+    padding: 5px 8px;
+    margin: 5px 0; /* Add some margin to separate the buttons */
+    text-align: left;
+
+}
+
+.leagueContainer button:hover {
+    border-radius: 15px;
+    background: rgba(183, 106, 255, 0.596);
+    padding: 5px 8px;
+}
+.leagueContainer button:active {
+    border-radius: 15px;
+    background: rgba(183, 106, 255, 0.596);
+    padding: 5px 8px;
+}
+
+
+button img {
+    width: 30px; /* Adjust the width as needed */
+    height: 30px; /* Adjust the height as needed */
+    vertical-align: middle; /* Align the image vertically with the text */
+    margin-right: 10px; /* Add some margin to separate the image and text */
+}
+
+.articleContainer{
+    margin-top: 4%;
+    background-color: white;
+    float: right;
+    margin-right: 3%;
+    border-radius: 15px; 
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); 
+    text-align: center;
+    padding: 20px;
+    width: 18%;
+}
+
+.articleContainer button{
+    display: block; /* Change the display property to block */
+    border: 2px solid rgb(204, 204, 204);
+    width: 100%;
+    border-radius: 15px;
+    background: white;
+    padding: 8px 8px;
+    margin: 5px 0; /* Add some margin to separate the buttons */
+    text-align: center;
+}
+
+.articleContainer button:hover {
+    border-radius: 15px;
+    background: rgba(183, 106, 255, 0.596);
+    border: 2px solid rgba(183, 106, 255, 0.596);
+    padding: 5px 6px;
+}
+
+.imgSlideshow{
+    margin-top: 4%;
+    background-color: white;
+    float: left;
+    margin-left: 3%;
+    border-radius: 15px; 
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); 
+    text-align: center;
+    padding: 15px;
+    width: 18%;
+}
+
+.mySlides {display: none;}
+img {vertical-align: middle;}
+
+/* Slideshow container */
+.slideshow-container {
+  max-width: 1000px;
+  position: relative;
+  margin: auto;
+}
+
+
+
+/* The dots/bullets/indicators */
+.dot {
+  height: 10px;
+  width: 10px;
+  margin: 0 2px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+  transition: background-color 0.6s ease;
+}
+
+.active {
+  background-color: #717171;
+}
+
+/* Fading animation */
+.fade {
+  animation-name: fade;
+  animation-duration: 1.5s;
+}
+
+@keyframes fade {
+  from {opacity: .4} 
+  to {opacity: 1}
+}
+
+/* On smaller screens, decrease text size */
+@media only screen and (max-width: 300px) {
+  .text {font-size: 11px}
+}

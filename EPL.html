@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="index.css">
+    </head>
+    <body>
+        <div class="container">
+            <h1>Women's Super League</h1>
+            <button id="upcomingGames">Upcoming Games</button>
+            <button id="liveGames">Live Games</button>
+            <button id="pastGames">Past Games</button>
+        
+            <br><br>
+          <div class="leagueText">
+            <h3>Women's Super League</h3>
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lectus urna duis convallis convallis tellus. Nullam non nisi est sit amet facilisis magna. Placerat duis ultricies lacus sed. Ullamcorper a lacus vestibulum sed arcu non odio euismod lacinia. Ac feugiat sed lectus vestibulum mattis. Posuere lorem ipsum dolor sit amet consectetur adipiscing elit. Nec ultrices dui sapien eget mi proin sed libero enim. Lobortis scelerisque fermentum dui faucibus in ornare quam
+            </p>
+          </div>
+        
+          <table class="upcomingGamesTable"> 
+            <tr>
+             <th>Home Team</th>
+             <th>vs</th>
+             <th>Away Team</th>
+             <th>Kick Off</th>
+            </tr>
+        
+             </table>
+        <div class="liveGamesContainer">
+            <table class="liveGamesTable"> </table>
+               <div class="liveGamesTableMsg">No Live Matches. </div>
+        </div>
+
+        
+        <table class="pastGamesTable">
+            <tr>
+                <th>Home Team</th>
+                <th>vs</th>
+                <th>Away Team</th>
+                <th>Final Score</th>
+               </tr>
+        </table>
+        
+          </div>
+        
+          <div class="leagueContainer">
+            <h2>Women's Leagues</h2>
+            <button><img src="womensSuperLeague.png">Women's Super League</button>
+            <button><img src="nationalWomensSoccerLeague.png">National Women's Soccer League</button>
+            <button><img src="FAWomensChampionship.png">FA Women's League Cup</button>
+            <button><img src="Primera Iberdrola.png">Primera Iberdrola</button>
+            <button><img src="Frauen-Bundesliga.PNG">Frauen-Bundesliga</button>
+            <button><img src="WE League.png">WE League</button>
+            <button><img src="A-League Women.png">A-League Women</button>
+            <button><img src="Damallsvenskan.jpg">Damallsvenskan</button>
+          </div>
+        
+          <div class="articleContainer">
+            <h4>Want to Submit your Article?</h4>
+            <h5>Discuss with your community about what is happening in Women's Football!</h5>
+            <h5>Log in to Share your article</h5>
+            <button>Log In</button>
+            <h5>Don't have an Account?</h5>
+            <button>Sign Up</button>
+            <h5>OR</h5>
+            <button><img src="Google__G__Logo.svg.png">Sign in With Google</button>
+        
+          </div>
+        
+          <div class="imgSlideshow">
+            <h4>Keep up to Date with the Latest Women's Football News</h4>
+            <div class="slideshow-container">
+        
+              <div class="mySlides fade">
+                <img src="1.jpg" style="width:100%">
+              </div>
+              
+              <div class="mySlides fade">
+                <img src="2.jpg" style="width:100%">
+              </div>
+              
+              <div class="mySlides fade">
+                <img src="3.jpg" style="width:100%">
+              </div>
+              
+              </div>
+              <br>
+              
+              <div style="text-align:center">
+                <span class="dot"></span> 
+                <span class="dot"></span> 
+                <span class="dot"></span> 
+              </div>
+          </div>
+          <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+          <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+          
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script>
+// Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyC2GQhqdMkLxVmcRMhbu2MyukMhjk7_rI8",
+  authDomain: "she-shoot-she-scores.firebaseapp.com",
+  databaseURL: "https://she-shoot-she-scores-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "she-shoot-she-scores",
+  storageBucket: "she-shoot-she-scores.appspot.com",
+  messagingSenderId: "709319391076",
+  appId: "1:709319391076:web:5c7825e020a7a77d2dac71",
+  measurementId: "G-4VSGK7B0K4"
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+
+// Firebase database reference
+const database = firebase.database();
+
+// DOM element references
+const leagueText = document.querySelector('.leagueText');
+const upcomingGamesTable = document.querySelector('.upcomingGamesTable');
+const upcomingGamesButton = document.getElementById('upcomingGames');
+const pastGamesButton = document.getElementById('pastGames');
+const liveGamesButton = document.getElementById('liveGames');
+const pastGamesTable = document.querySelector('.pastGamesTable');
+const liveGamesTable = document.querySelector('.liveGamesTable');
+const liveGamesTableMsg = document.querySelector('.liveGamesTableMsg');
+const liveGamesContainer = document.querySelector('.liveGamesContainer');
+
+// Initial display settings
+leagueText.style.display = 'block';
+upcomingGamesTable.style.display = 'none';
+liveGamesTable.style.display = 'none';
+pastGamesTable.style.display = 'none';
+liveGamesTable.style.display = 'none';
+liveGamesTableMsg.style.display = 'none';
+
+
+// Function to fetch data from a remote API
+async function fetchData() {
+  const options = {
+    method: 'GET',
+    url: 'https://odds.p.rapidapi.com/v4/sports/soccer_epl/scores',
+    params: { daysFrom: '3' },
+    headers: {
+      'X-RapidAPI-Key': 'cc25be1117msh130677156d9f847p1c8dfcjsna2bde567f246',
+      'X-RapidAPI-Host': 'odds.p.rapidapi.com'
+    }
+  };
+
+  try {
+    const response = await axios.request(options);
+    console.log(response.data);
+    upcomingGamesTableData(response.data);
+    liveGamesTableData(response.data);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+const apiKey = 'cc25be1117msh130677156d9f847p1c8dfcjsna2bde567f246';
+
+const requestOptions = {
+  method: 'GET',
+  params: { daysFrom: '3' },
+
+  headers: {
+    'x-rapidapi-key': apiKey,
+    'x-rapidapi-host': 'odds.p.rapidapi.com',
+  },
+};
+
+// Function to populate the upcoming games table
+function upcomingGamesTableData(data) {
+  const upcomingGamesTableData = document.querySelector('.upcomingGamesTable');
+
+  while (upcomingGamesTableData.rows.length > 1) {
+    upcomingGamesTableData.deleteRow(1);
+  }
+
+  data.forEach((match) => {
+    if(match.completed === false) {
+    const row = upcomingGamesTableData.insertRow();
+
+    const homeTeamCell = row.insertCell();
+    homeTeamCell.textContent = match.home_team;
+
+    const VSCell = row.insertCell();
+    VSCell.textContent = "vs";
+
+    const awayTeamCell = row.insertCell();
+    awayTeamCell.textContent = match.away_team;
+
+    const startTimeCell = row.insertCell();
+    startTimeCell.textContent = match.commence_time;
+    }
+
+  });
+}
+
+// Event listener for the "Upcoming Games" button
+document.getElementById("upcomingGames").addEventListener("click", function () {
+  leagueText.style.display = 'none';
+  pastGamesTable.style.display = 'none';
+  liveGamesTable.style.display = 'none';
+  liveGamesTableMsg.style.display = 'none';
+  upcomingGamesTable.style.display = 'block';
+});
+
+function liveGamesTableData(data) {
+
+data.forEach((match) => {
+  if (match.completed === true) {
+    const matches = database.ref('2023EPL');
+    matches.orderByChild("homeTeam").equalTo(match.home_team)
+      .once("value", snapshot => {
+        if (!snapshot.exists()) {
+          matches.push().set({
+            homeTeam: match.home_team,
+            awayTeam: match.away_team,
+            homeTeamScore: match.scores[0].score,
+            awayTeamScore: match.scores[1].score,
+          });
+          console.log('Data Saved');
+        } else {
+          console.log('Data Exists');
+        }
+      });
+  }
+});
+}
+
+
+liveGamesButton.onclick = function () {
+console.log('Live Games Button Clicked');
+upcomingGamesTable.style.display = 'none';
+leagueText.style.display = 'none';
+pastGamesTable.style.display = 'none';
+
+liveGamesTable.innerHTML = '';
+
+fetch('https://odds.p.rapidapi.com/v4/sports/soccer_epl/scores', requestOptions)
+  .then(response => {
+    return response.json();
+  })
+  .then(data => {
+    console.log('Received data:', data);
+    let liveGame = false;
+    data.forEach(match => {
+      console.log('Checking match:', match);
+      if (Array.isArray(match.scores) && match.scores.length === 2  && match.completed === false) {
+        console.log('Live game found:', match);
+        liveGamesTable.style.display = 'block';
+        liveGamesTableMsg.style.display = 'none';
+        liveGame = true;
+
+
+        
+        const row = liveGamesTable.insertRow();
+
+        const homeTeamCell = row.insertCell();
+        homeTeamCell.textContent = match.home_team;
+
+        const vsCell = row.insertCell();
+        vsCell.textContent = "vs";
+
+        const awayTeamCell = row.insertCell();
+        awayTeamCell.textContent = match.away_team;
+
+        const scoreCell = row.insertCell();
+        if (Array.isArray(match.scores) && match.scores.length === 2) {
+          scoreCell.textContent = match.scores[0].score + " - " + match.scores[1].score;
+        }
+        console.log('Row added to liveGamesTable:', row);
+      } 
+      if (liveGame) {
+        liveGamesTable.style.display = 'block';
+        liveGamesTableMsg.style.display = 'none';
+      } else {
+        liveGamesTable.style.display = 'none';
+        liveGamesTableMsg.style.display = 'block';
+      }
+
+    }
+    );
+  })
+  .catch(error => console.log(error));
+};
+
+
+const matches = database.ref('2023EPL');
+
+
+// Function to complete the past games table
+function completePastGamesTable(data) {
+  pastGamesTable.innerHTML = '';
+
+  for (const key in data) {
+    if (data.hasOwnProperty(key)) {
+      const match = data[key];
+      const row = pastGamesTable.insertRow();
+      const homeTeamCell = row.insertCell();
+      homeTeamCell.textContent = match.homeTeam;
+      const vsCell = row.insertCell();
+      vsCell.textContent = 'vs';
+      const awayTeamCell = row.insertCell();
+      awayTeamCell.textContent = match.awayTeam;
+      const scoreCell = row.insertCell();
+
+      if (match.homeTeamScore !== undefined && match.awayTeamScore !== undefined) {
+        scoreCell.textContent = match.homeTeamScore + " - " + match.awayTeamScore;
+      }
+    }
+  }
+}
+
+// Event listener for the "Past Games" button
+pastGamesButton.onclick = function () {
+  upcomingGamesTable.style.display = 'none';
+  leagueText.style.display = 'none';
+  liveGamesTable.style.display = 'none';
+  liveGamesTableMsg.style.display = 'none';
+  pastGamesTable.style.display = 'block';
+
+  matches.orderByChild("homeTeam").once('value')
+    .then(snapshot => {
+      const pastGamesData = snapshot.val();
+      if (pastGamesData) {
+        completePastGamesTable(pastGamesData);
+        pastGamesTable.style.display = 'block';
+      } else {
+        pastGamesTable.style.display = 'none';
+      }
+    })
+    .catch(error => console.log(error));
+};
+
+// Initial data fetch
+fetchData();
+
+// Set up a timer to periodically fetch and update live game data (e.g., every 10 seconds)
+//setInterval(fetchData, 50000); // 10000 milliseconds = 10 seconds
+
+
+let slideIndex = 0;
+  showSlides();
+  
+  function showSlides() {
+  let i;
+  let slides = document.getElementsByClassName("mySlides");
+  let dots = document.getElementsByClassName("dot");
+  for (i = 0; i < slides.length; i++) {
+    slides[i].style.display = "none";  
+  }
+  slideIndex++;
+  if (slideIndex > slides.length) {slideIndex = 1}    
+  for (i = 0; i < dots.length; i++) {
+    dots[i].className = dots[i].className.replace(" active", "");
+  }
+  slides[slideIndex-1].style.display = "block";  
+  dots[slideIndex-1].className += " active";
+  setTimeout(showSlides, 4000); // Change image every 4 seconds
+}
+        </script>
+
+      
+    </body>
+</html>
